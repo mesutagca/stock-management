@@ -12,6 +12,9 @@
                 Name
             </th>
             <th scope="col" class="px-6 py-3">
+                Email
+            </th>
+            <th scope="col" class="px-6 py-3">
                 Role
             </th>
             <th scope="col" class="px-6 py-3">
@@ -26,23 +29,37 @@
         @foreach($users as $user)
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
-                <td class="px-6 py-4 text-center w-12">
+                <td class="px-6 py-4  w-12">
                     <img class="h-8 w-8 rounded-full object-cover " src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" style="min-width: 35px" />
                 </td>
-                <td class="px-6 py-4 text-center">
+                <td class="px-6 py-4 ">
                     {{ $user->name }}
                 </td>
-                <td class="px-6 py-4 text-center ">
+                <td class="px-6 py-4 ">
+                    {{ $user->email }}
+                </td>
+                <td class="px-6 py-4 ">
                     {{ $user->role }}
                 </td>
-                <td class="px-6 py-4 text-center">
+                <td class="px-6 py-4 ">
                   <span class="{{$user->approved ? 'text-green-500' : 'text-red-500'}}">
                       {{$user->approved ? 'active' : 'pending'}}
                   </span>
                 </td>
 
-                <td class="px-6 py-4 text-center">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
+                <td class="px-6 py-4 ">
+                    @if(!$user->approved)
+                        <a href="{{route('users.approve', $user->id)}}" class="font-medium text-green-400 dark:text-blue-500 hover:underline">
+                            <i class="fa-solid fa-lock-open"></i>
+                        </a>
+                    @else
+                        <a href="{{route('users.disapprove', $user->id)}}" class="font-medium text-red-400 dark:text-blue-500 hover:underline">
+                            <i class="fa-solid fa-lock"></i>
+                        </a>
+                    @endif
+                    <a href="{{route('users.purge', $user->id)}}" class="font-medium text-red-600 dark:text-blue-500 hover:underline" onclick="return onUserDelete();">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         @endforeach
@@ -72,3 +89,8 @@
     </nav>
 </div>
 
+<script>
+    function onUserDelete(){
+        return confirm('are you sure you want to delete');
+    }
+</script>

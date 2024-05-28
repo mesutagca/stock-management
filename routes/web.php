@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,13 +18,16 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
+    Route::get('users/{id}/delete', [UserController::class, 'destroy'])->whereNumber('id')->name('users.purge');
+    Route::get('users/{id}/approve', [UserController::class, 'approve'])->whereNumber('id')->name('users.approve');
+    Route::get('users/{id}/disapprove', [UserController::class, 'disapprove'])->whereNumber('id')->name('users.disapprove');
     Route::resource('users', UserController::class);
 
-    Route::get('/categories', function () {
-        return view('categories');
-    })->name('categories');
+    Route::get('categories/{id}', [CategoryController::class, 'destroy'])->whereNumber('id')->name('categories.destroy');
+    Route::resource('categories', CategoryController::class);
 
-    Route::get('/products', function () {
-        return view('products');
-    })->name('products');
+    Route::get('products/{id}', [ProductController::class, 'destroy'])->whereNumber('id')->name('products.destroy');
+    Route::get('products/change-amount/{id}/{type?}', [ProductController::class, 'changeAmount'])->whereNumber('id')->name('products.changeAmount');
+
+    Route::resource('products', ProductController::class);
 });

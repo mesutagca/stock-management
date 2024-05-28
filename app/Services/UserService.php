@@ -9,7 +9,26 @@ class UserService
 {
     public function listUsers():LengthAwarePaginator
     {
-        return User::paginate(2);
+        return User::query()->where('role','<>','admin')->paginate(20);
+    }
+
+    public function approveUser(int $userId):bool
+    {
+        return User::query()->find($userId)->update([
+            'approved'=>true
+        ]);
+    }
+
+    public function disApproveUser(int $userId):bool
+    {
+        return User::query()->find($userId)->update([
+            'approved'=>false
+        ]);
+    }
+
+    public function deleteUser(int $userId):bool
+    {
+        return User::query()->find($userId)->delete();
     }
 
 }
