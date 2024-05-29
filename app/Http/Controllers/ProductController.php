@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\CategoryService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\File;
 
 class ProductController extends Controller
 {
@@ -25,9 +28,10 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(CategoryService $categoryService)
     {
-        return view('product/product-ekle');
+        $categories=$categoryService->getAll();
+        return view('product/product-ekle',['categories'=>$categories]);
     }
 
     /**
@@ -36,11 +40,16 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'category_id'=>'required|numeric|max:5',
-            'name' => 'required|string|unique:categories|max:50'
+            'category_id'=>'required|numeric',
+            'name' => 'required|string|unique:products|max:50',
+            'amount'=>'required|numeric',
+            'photo' => [
+                'required',
+                File::image()
+            ]
         ]);
-        $this->productService->store($validated);
-        return $this->index();
+        $this->productService->store(array_merge($validated,['user_id'=>Auth::user()->id]));
+        return redirect()->route('products.index');
     }
 
     /**
@@ -54,37 +63,32 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id,CategoryService $categoryService)
     {
         $product=$this->productService->show($id);
-        return view('product/product-guncelle',['product'=>$product]);
+        $categories=$categoryService->getAll();
+        return view('product/product-ekle',['product'=>$product, 'categories'=>$categories]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(int $productId,Request $request)
     {
         /** @var Product $product */
-        $product=$this->productService->show($id);
+        $product=$this->productService->show($productId);
 
         $validated = $request->validate([
-            'name' => 'string|unique:categories|max:50',
-            'amount'=>'numeric'
+            'category_id'=>'required|numeric',
+            'name' => 'required|string|max:50',
+            'amount'=>'required|numeric',
+            'photo' => [
+                File::image()
+            ]
         ]);
 
         $this->productService->update($product,$validated);
-        return $this->index();
-    }
-
-    public function changeAmount(string $id, string $type='decrease')
-    {
-        /** @var Product $product */
-        $product=$this->productService->show($id);
-        $amount=$type=='decrease' ? $product->amount-1 : $product->amount+1;
-dd($amount);
-            $this->productService->update($product,['amount'=>$amount]);
-        return $this->index();
+        return redirect()->route('products.index');
     }
 
     /**
@@ -95,6 +99,6 @@ dd($amount);
         /** @var Product $product */
         $product=$this->productService->show($id);
         $this->productService->delete($product);
-        return $this->index();
+        return redirect()->route('products.index');
     }
 }

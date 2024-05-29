@@ -26,9 +26,8 @@
                         <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="category-name" required value="{{$category->name ?? ''}}" />
                     </div>
                     <div class="mb-5">
-
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="user_avatar">Upload file</label>
-                        <img src="{{$category->profile_photo_path ? $category->profile_photo_url : \Illuminate\Support\Facades\Storage::url('images/no-preview.jpeg')}}" alt="preview" id="preview" class="p-1 mb-3 border border-gray-300 rounded-lg" style="max-width:100px;">
+                        <img src="{{isset($category) && $category->profile_photo_path ? $category->profile_photo_url : \Illuminate\Support\Facades\Storage::url('images/no-preview.jpeg')}}" alt="preview" id="preview" class="p-1 mb-3 border border-gray-300 rounded-lg" style="max-width:100px;">
                         <input onchange="onPhotoChanged(event)" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="user_avatar_help" id="photo" type="file" name="photo">
                         <div class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="user_avatar_help">Add Category Picture</div>
                     </div>

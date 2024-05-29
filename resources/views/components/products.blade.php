@@ -1,16 +1,12 @@
 
 
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <div class="card ">
-        <div class="card-body">
-            <h5 class="card-title">
-                <a href="{{route('products.create')}}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i> Product Ekle</a>
-            </h5>
-        </div>
-    </div>
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
+            <th scope="col" class="px-6 py-3">
+
+            </th>
             <th scope="col" class="px-6 py-3">
                 Name
             </th>
@@ -34,7 +30,9 @@
         <tbody>
         @foreach($products as $product)
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-
+                <td class="px-6 py-4  w-12">
+                    <img class="h-8 w-8 rounded-full object-cover " src="{{ $product->profile_photo_url }}" alt="{{ $product->name }}" style="min-width: 35px" />
+                </td>
                 <td class="px-6 py-4 text-center">
                     {{ $product->name }}
                 </td>
@@ -51,13 +49,12 @@
                     {{ $product->updated_at }}
                 </td>
                 <td class="px-6 py-4 text-center">
-                    <a href="{{route('products.changeAmount', [$product->id,'decrease'])}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">azalt</a>
-                    <span>----</span>
-                    <a href="{{route('products.changeAmount', [$product->id,'increase'])}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">arttır</a>
-                    <span>----</span>
-                    <a href="{{route('products.edit', $product->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">update</a>
-                    <span>----</span>
-                    <a href="{{route('products.destroy', $product->id)}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                    <a href="{{route('products.edit', $product->id)}}" class="font-medium text-orange-600 dark:text-blue-500 hover:underline">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+                    <a href="{{route('products.destroy', $product->id)}}" class="font-medium text-red-600 dark:text-blue-500 hover:underline" onclick="return onProductDelete()">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         @endforeach
@@ -86,4 +83,8 @@
         </ul>
     </nav>
 </div>
-
+<script>
+    function onProductDelete(){
+        return confirm('are you sure you want to delete');
+    }
+</script>

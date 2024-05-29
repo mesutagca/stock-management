@@ -24,7 +24,7 @@
                         {{ __('Categories') }}
                     </x-nav-link>
                     @endif
-                    <x-nav-link href="{{ route('products.index') }}" :active="request()->routeIs('products.index')">
+                    <x-nav-link href="{{ route('products.index') }}" :active="request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit') ">
                         {{ __('Products') }}
                     </x-nav-link>
                 </div>

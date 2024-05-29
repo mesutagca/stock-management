@@ -20,17 +20,24 @@ class ProductService
 
     public function show(int $productId):?Model
     {
-        return Product::query()->find($productId);
+        return Product::query()->with('category')->find($productId);
     }
 
     public function store(array $params): ?Model
     {
-        return Product::query()->create($params);
+        /** @var Product $product */
+        $product=Product::query()->create(array_merge($params,['profile_photo_path'=>'']));
+        $product->updateProfilePhoto($params['photo'],'product-photos');
+        return $product;
     }
 
     public function update(Product $product,array $params):bool
     {
-        return $product->update($params);
+       $result= $product->update($params);
+        if(isset($params['photo'])){
+            $product->updateProfilePhoto($params['photo'],'product-photos');
+        }
+        return $result;
     }
 
     public function delete(Product $product):bool

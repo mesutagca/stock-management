@@ -28,8 +28,6 @@ Route::middleware([
     Route::resource('categories', CategoryController::class);
 
     Route::get('products/{id}', [ProductController::class, 'destroy'])->whereNumber('id')->name('products.destroy');
-    Route::get('products/change-amount/{id}/{type?}', [ProductController::class, 'changeAmount'])->whereNumber('id')->name('products.changeAmount');
-
     Route::resource('products', ProductController::class);
 });
 

@@ -9,6 +9,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryService
 {
+    public function getAll()
+    {
+        return Category::all();
+    }
     public function listCategory():LengthAwarePaginator
     {
         return Category::paginate(20);
